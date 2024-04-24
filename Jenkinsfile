@@ -17,20 +17,65 @@ pipeline {
               }
   
         }
-        stage('creating a file') {
-            steps {
-                sh '''
-                touch money.txt
-                rm -rf money.txt
-                '''
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
-            }
-        }
-    } 
+        stage('Test maven-cart') {
+	    agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/cart/
+           mvn  test  -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }
+
+       stage('Test maven-ui') {
+	    agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/ui/
+           mvn  test  -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }
+       stage('Test maven-orders') {
+	    agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/orders/
+           mvn  test  -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }
+
+        stage('Test maven-node') {
+	    agent {
+           docker {
+             image 'node'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/checkout/
+           npm install
+               '''
+           }
+       }
+        
+        
+    }
+
+     
   // post {
   //    success {
   //        slackSend color: '#2EB67D',
