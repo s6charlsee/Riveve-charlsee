@@ -76,7 +76,7 @@ pipeline {
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/checkout/
-           npm install
+           npm test
                '''
            }
        }
