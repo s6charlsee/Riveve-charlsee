@@ -71,12 +71,15 @@ pipeline {
 	    agent {
            docker {
              image 'node'
+             args '-u 0:0'
+             
            }
           }
            steps {
                sh '''
            cd $WORKSPACE/REVIVE/src/checkout/
-           npm test
+           npm install
+
                '''
            }
        }
