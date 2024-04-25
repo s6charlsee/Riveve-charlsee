@@ -2,6 +2,15 @@ pipeline {
     agent any
 
     stages {
+        stage('clean env') {
+            steps {
+                sh '''
+            docker system prune -fa || true
+                '''
+            }
+        }
+      
+
         stage('Test microservice catalog') {
 	      agent {
             docker {
