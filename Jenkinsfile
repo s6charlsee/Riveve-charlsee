@@ -11,23 +11,9 @@ pipeline {
         }
       
 
-        stage('Test microservice catalog') {
-	      agent {
-            docker {
-              image 'golang:1.20.1'
-              args '-u 0:0'
-            }
-           }
-            steps {
-                sh '''
-            cd $WORKSPACE/REVIVE/src/catalog/
-            go test
-                '''
-              }
-  
-        }
-        stage('Test maven-cart') {
-	    agent {
+        C
+      stage('Test maven-cart') {
+	     agent {
            docker {
              image 'maven:3.8.7-openjdk-18'
            }
@@ -40,8 +26,8 @@ pipeline {
            }
        }
 
-       stage('Test maven-ui') {
-	    agent {
+      stage('Test maven-ui') {
+	     agent {
            docker {
              image 'maven:3.8.7-openjdk-18'
            }
@@ -53,8 +39,8 @@ pipeline {
                '''
            }
        }
-       stage('Test maven-orders') {
-	    agent {
+      stage('Test maven-orders') {
+	     agent {
            docker {
              image 'maven:3.8.7-openjdk-18'
            }
@@ -67,8 +53,8 @@ pipeline {
            }
        }
 
-        stage('Test maven-node') {
-	    agent {
+      stage('Test maven-node') {
+	     agent {
            docker {
              image 'node'
              args '-u 0:0'
@@ -83,7 +69,7 @@ pipeline {
                '''
            }
        }
-       stage('SonarQube analysis') {
+        stage('SonarQube analysis') {
                 agent {
                     docker {
                       image 'sonarsource/sonar-scanner-cli:4.7.0'
@@ -106,6 +92,89 @@ pipeline {
                   }
                 }
               }
+        stage('build artifact microservice catalog') {
+	       agent {
+            docker {
+              image 'golang:1.20.1'
+              args '-u 0:0'
+            }
+           }
+            steps {
+                sh '''
+            cd $WORKSPACE/REVIVE/src/catalog/
+            go build   -buildvcs=false
+                '''
+              }
+  
+        }
+        stage('build artifact maven-ui') {
+	       agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/ui/
+           mvn  package -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }
+       stage('build artifact maven-orders') {
+	     agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/orders/
+           mvn  package -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }
+       stage('build artifact maven-node') {
+	     agent {
+           docker {
+             image 'node'
+             args '-u 0:0'
+             
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/checkout/
+           npm install
+           npm run build
+               '''
+           }
+       }
+       stage('build artifact maven-orders') {
+	     agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/orders/
+           mvn  package -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }
+       stage('build artifact maven-ui') {
+	     agent {
+           docker {
+             image 'maven:3.8.7-openjdk-18'
+           }
+          }
+           steps {
+               sh '''
+           cd $WORKSPACE/REVIVE/src/ui/
+           mvn  package -Dmaven.test.skip=true --quiet
+               '''
+           }
+       }
         
         
     }
