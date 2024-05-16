@@ -11,7 +11,7 @@ pipeline {
         }
       
 
-        C
+        
       stage('Test maven-cart') {
 	     agent {
            docker {
@@ -149,32 +149,7 @@ pipeline {
                '''
            }
        }
-       stage('build artifact maven-orders') {
-	     agent {
-           docker {
-             image 'maven:3.8.7-openjdk-18'
-           }
-          }
-           steps {
-               sh '''
-           cd $WORKSPACE/REVIVE/src/orders/
-           mvn  package -Dmaven.test.skip=true --quiet
-               '''
-           }
-       }
-       stage('build artifact maven-ui') {
-	     agent {
-           docker {
-             image 'maven:3.8.7-openjdk-18'
-           }
-          }
-           steps {
-               sh '''
-           cd $WORKSPACE/REVIVE/src/ui/
-           mvn  package -Dmaven.test.skip=true --quiet
-               '''
-           }
-       }
+       
         
         
     }
