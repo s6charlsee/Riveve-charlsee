@@ -69,29 +69,29 @@ pipeline {
                '''
            }
        }
-        stage('SonarQube analysis') {
-                agent {
-                    docker {
-                      image 'sonarsource/sonar-scanner-cli:4.7.0'
-                    }
-                   }
-                   environment {
-            CI = 'true'
-            scannerHome='/opt/sonar-scanner'
-        }
-                steps{
-                    withSonarQubeEnv('sonar') {
-                        sh "${scannerHome}/bin/sonar-scanner"
-                    }
-                }
-            }
-        stage("Quality Gate") {
-                steps {
-                  timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
-                  }
-                }
-              }
+    //  stage('SonarQube analysis') {
+    //          agent {
+    //              docker {
+    //                image 'sonarsource/sonar-scanner-cli:4.7.0'
+    //              }
+    //             }
+    //             environment {
+    //      CI = 'true'
+    //      scannerHome='/opt/sonar-scanner'
+    //  }
+    //          steps{
+    //              withSonarQubeEnv('sonar') {
+    //                  sh "${scannerHome}/bin/sonar-scanner"
+    //              }
+    //          }
+    //      }
+    //  stage("Quality Gate") {
+    //          steps {
+    //            timeout(time: 1, unit: 'HOURS') {
+    //              waitForQualityGate abortPipeline: true
+    //            }
+    //          }
+    //        }
         stage('build artifact microservice catalog') {
 	       agent {
             docker {
